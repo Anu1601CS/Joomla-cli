@@ -3,7 +3,7 @@
 // CLI not a web interface
 if (php_sapi_name() !== 'cli')
 {
-	die('This is a command line only application.');
+    die('This is a command line only application.');
 }
 
 // We are a valid entry point.
@@ -15,13 +15,13 @@ ini_set('display_errors', 1);
 // Load system defines
 if (file_exists(dirname(__DIR__) . '/defines.php'))
 {
-	require_once dirname(__DIR__) . '/defines.php';
+    require_once dirname(__DIR__) . '/defines.php';
 }
 
 if (!defined('_JDEFINES'))
 {
-	define('JPATH_BASE', dirname(__DIR__));
-	require_once JPATH_BASE . '/includes/defines.php';
+    define('JPATH_BASE', dirname(__DIR__));
+    require_once JPATH_BASE . '/includes/defines.php';
 }
 
 require_once JPATH_LIBRARIES . '/bootstrap.php';
@@ -36,17 +36,7 @@ class ArticleCli extends JApplicationCli
         parent::__construct();
 
         $this->config = new JConfig();
-
-        $options = array(
-                'driver' => $this->config->dbtype,
-                'host' => $this->config->host,
-                'user' => $this->config->user,
-                'password' => $this->config->password,
-                'database' => $this->config->db,
-                'prefix' => $this->config->dbprefix,
-            );
-
-        $this->dbo = JDatabaseDriver::getInstance($options);
+        $this->db = JFactory::getDbo();
         
         JFactory::$application = $this;
     }
@@ -62,46 +52,48 @@ class ArticleCli extends JApplicationCli
         }
     }
 
-    private function save($cat_title) {
+    private function save($title) {
         
         $table = JTable::getInstance("Category");
 
         // get existing aliases from categories table
-        $tab = $this->dbo->quoteName($this->config->dbprefix . "categories");
+        $tab = $this->db->quoteName($this->config->dbprefix . "categories");
         $conditions = array(
-            $this->dbo->quoteName("extension") . " LIKE 'com_content'"
+            $this->db->quoteName("extension") . " LIKE 'com_content'"
         );
 
-
-        $query = $this->dbo->getQuery(true);
+        $query = $this->db->getQuery(true);
         $query
-            ->select($this->dbo->quoteName("alias"))
+            ->select($this->db->quoteName("alias"))
             ->from($tab)
             ->where($conditions);
 
-        $this->dbo->setQuery($query);
-        $cat_from_db = $this->dbo->loadObjectList();
+        $this->db->setQuery($query);
+        $cat_from_db = $this->db->loadObjectList();
 
         $category_existing = False;
-        $new_alias = JFilterOutput::stringURLSafe($cat_title);
+        $new_alias = JFilterOutput::stringURLSafe($title);
 
-        foreach ($cat_from_db as $cdb) {
-            if ($cdb->alias == $new_alias) {
+        foreach ($cat_from_db as $cdb) 
+        {
+            if ($cdb->alias == $new_alias) 
+            {
                 $category_existing = True;
                 $this->out("category already existing: " . $new_alias . "\n");
             }
         }
             
-        if (!$category_existing) {
+        if (!$category_existing)
+        {
 
             $values = [
-                "id"	=> null,
-                "title" => $cat_title,
-                "path" 	=> $new_alias,
+                "id"    => null,
+                "title" => $title,
+                "path"  => $new_alias,
                 "access" => 1,
                 "extension" => "com_content",
                 "published" => 1,
-                "language" 	=> "*",
+                "language"  => "*",
                 "created_user_id" => 0,
                 "params" => array (
                     "category_layout" => "",
@@ -115,18 +107,21 @@ class ArticleCli extends JApplicationCli
 
             $table->setLocation(1, "last-child");
 
-            if (!$table->bind($values)) {
+            if (!$table->bind($values)) 
+            {
                 JLog::add($row->getError(), JLog::ERROR, 'jerror');
                 return FALSE;
                 
             }
 
-            if (!$table->check()) {
+            if (!$table->check()) 
+            {
                 JLog::add($row->getError(), JLog::ERROR, 'jerror');
                 return FALSE;
             }
 
-            if (!$table->store(TRUE)) {
+            if (!$table->store(TRUE)) 
+            {
                 JLog::add($row->getError(), JLog::ERROR, 'jerror');
                 return FALSE;
             } 
@@ -136,14 +131,6 @@ class ArticleCli extends JApplicationCli
         }
     }
 }
-
-try {
-    JApplicationCli::getInstance('ArticleCli')->execute();
-} 
-catch (Exception $e) {
-   
-    fwrite(STDOUT, $e->getMessage() . "\n");
-    exit($e->getCode());
-}
+JApplicationCli::getInstance('ArticleCli')->execute();
 
 ?>
