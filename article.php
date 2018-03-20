@@ -3,7 +3,7 @@
 // CLI not a web interface
 if (php_sapi_name() !== 'cli')
 {
-    die('This is a command line only application.');
+    die('This is a Command Line Application Only.');
 }
 
 // We are a valid entry point.
@@ -79,7 +79,7 @@ class ArticleCli extends JApplicationCli
             if ($cdb->alias == $new_alias) 
             {
                 $category_existing = True;
-                $this->out("category already existing: " . $new_alias . "\n");
+                $this->out("Category already existing: " . $new_alias . "\n");
             }
         }
             
@@ -111,7 +111,6 @@ class ArticleCli extends JApplicationCli
             {
                 JLog::add($row->getError(), JLog::ERROR, 'jerror');
                 return FALSE;
-                
             }
 
             if (!$table->check()) 
@@ -127,7 +126,7 @@ class ArticleCli extends JApplicationCli
             } 
 
             $table->rebuildPath($table->id); 
-            $this->out("category inserted: " . $table->id . " - " . $new_alias . "\n");
+            $this->out("Category inserted: " . $table->id . " - " . $new_alias . "\n");
         }
     }
 }
