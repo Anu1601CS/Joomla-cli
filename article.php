@@ -1,6 +1,6 @@
 <?php
 
-// CLI not a web interface
+// CLI
 if (php_sapi_name() !== 'cli')
 {
     die('This is a Command Line Application Only.');
