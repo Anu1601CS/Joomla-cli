@@ -61,63 +61,52 @@ JLoader::import('joomla.filesystem.file');
  */
 class JoomlaCliUpdate extends JApplicationCli
 {
-  public function __construct() 
-	 {
-        parent::__construct();
-  		  JFactory::$application = $this;
-    }
+	public function __construct() 
+	{
+        	parent::__construct();
+ 		JFactory::$application = $this;
+    	}
 
-	/**
-	 * Entry point for the script
-	 *
-	 * @return  void
-	 */
 	public function doExecute()
 	{
 		$_SERVER['HTTP_HOST'] = 'localhost';
 		$this->app = JFactory::getApplication('site');
-    $this->out($this->getSiteInfo());
+    		$this->out($this->getSiteInfo());
 	}
 
 	public function getSiteInfo()
 	{	
 		
 		$args = (array) $GLOBALS['argv'];
-  
-    	//	array_shift($args);
-  
-
-    	if(empty($args[2]))
-    	{
-    		$this->out('Command Not Found'."\n".
-            				'1 : --m Name Only'."\n".
-            				'2 : --u Full User INfo'."\n".
-            				'3 : --d Delete User');
-    		exit(1);
-    	}
+		
+    		if(empty($args[2]))
+    		{
+    			$this->out('Command Not Found'."\n".
+            			'1 : --m Name Only'."\n".
+            			'2 : --u Full User INfo'."\n".
+            			'3 : --d Delete User');
+    			exit(1);
+    		}
 
     	switch ($args[1]) 
-      {
-
-    		case  '--m':         	   
-        	   $result=$this->addusers($args[2]);
-             print_r($result);        	  
-        	   break;
+      	{
+		case  '--m':         	   
+        		$result=$this->addusers($args[2]);
+                     	break;
         	 
-        case  '--u':    
+        	case  '--u':    
         	 	@$username = $args[2];		
 		        @$name = $args[4];
 		        @$email = $args[6];		
 		        @$groups = $args[8];   	   
-        	   $result=$this->addusers($username,$name,$email,$groups);
+        	   	$result=$this->addusers($username,$name,$email,$groups);
         	   	break;  
-    
-        default:   
-          	   echo '[WARNING] Unknown parameter'."\n" ;
-            	 $this->out('Command Not Found'."\n".
-            				'1 : --m Name Only Dummy user'."\n".
-            				'2 : --u Full User Info needed'."\n");
-             	break;   
+   		
+		default:   
+          		$this->out('Command Not Found'."\n".
+            		'1 : --m Name Only Dummy user'."\n".
+            		'2 : --u Full User Info needed'."\n");
+             		break;   
     	}
     		
         $this->out();         
