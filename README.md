@@ -2,7 +2,7 @@
 Joomla-cli Examples
 
 # For Category 
-<code>php article.php --add <"Your title"> </code>
+1. <code>php article.php --add <"Your title"> </code>
   
 # For User 
 1 . <code>php user.php --dummy <"Your name"> </code><br>
