@@ -82,19 +82,18 @@ class JoomlaCliUpdate extends JApplicationCli
     		if(empty($args[2]))
     		{
     			$this->out('Command Not Found'."\n".
-            			'1 : --m Name Only'."\n".
-            			'2 : --u Full User INfo'."\n".
-            			'3 : --d Delete User');
+            			'1 : --dummy Name Only'."\n".
+            			'2 : --user Full User INfo');
     			exit(1);
     		}
 
     	switch ($args[1]) 
       	{
-		case  '--m':         	   
+		case  '--dummy':         	   
         		$result=$this->addusers($args[2]);
                      	break;
         	 
-        	case  '--u':    
+        	case  '--user':    
         	 	@$username = $args[2];		
 		        @$name = $args[4];
 		        @$email = $args[6];		
@@ -104,15 +103,15 @@ class JoomlaCliUpdate extends JApplicationCli
    		
 		default:   
           		$this->out('Command Not Found'."\n".
-            		'1 : --m Name Only Dummy user'."\n".
-            		'2 : --u Full User Info needed'."\n");
+            		'1 : --dummy Name Only Dummy user'."\n".
+            		'2 : --user  Full User Info needed'."\n");
              		break;   
     	}
     		
         $this->out();         
   }
 
-   public function addusers($username='user',$name='user',$email='@dummy.com',$groups=2)
+   public function addusers($username='user',$name='user',$email='@xyz.com',$groups=2)
     {
     
     require_once(JPATH_ADMINISTRATOR.'/components/com_users/models/user.php');

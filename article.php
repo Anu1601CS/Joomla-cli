@@ -53,7 +53,7 @@ class ArticleCli extends JApplicationCli
 
         $category_titles = (array) $GLOBALS['argv'];
         
-        if($this->input->get('a',False))
+        if($this->input->get('add',False))
         {    
             // add categories to database
             for ($i = 2; $i <= count($category_titles); $i++)
@@ -74,7 +74,7 @@ class ArticleCli extends JApplicationCli
             $this->out();
             $this->out('Command Not Found =====>   '.$category_titles[1]);
             $this->out();
-            $this->out('Use   ======>    php article.php --a <Your titles> ');
+            $this->out('Use   ======>    php article.php --add <Your titles> ');
             $this->out();
         } 
 
