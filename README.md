@@ -6,4 +6,4 @@ Joomla-cli Examples
   
 # For User 
 1 . <code>php user.php --dummy <"Your name"> </code><br>
-2 . <code>php user.php --user <"Your info Like : Name, Username,Email, Password"> </code>  
+2 . <code>php user.php --user <"Your info Like : Username, Name , Email, Group"> </code>  
