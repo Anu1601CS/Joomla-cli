@@ -1,6 +1,8 @@
 # Joomla-cli
 Joomla-cli Examples
 
+# Paste in you cli dir.
+
 # For Category 
 1. <code>php article.php --add <"Your title"> </code>
   
