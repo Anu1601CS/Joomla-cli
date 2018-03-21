@@ -24,7 +24,11 @@ if (!defined('_JDEFINES'))
     require_once JPATH_BASE . '/includes/defines.php';
 }
 
-require_once JPATH_LIBRARIES . '/bootstrap.php';
+// Get the framework. 
+require_once JPATH_LIBRARIES . '/import.legacy.php'; 
+
+// Bootstrap the CMS libraries. 
+require_once JPATH_LIBRARIES . '/cms.php'; 
 
 // Load the configuration
 require_once JPATH_CONFIGURATION . '/configuration.php';
@@ -32,30 +36,54 @@ require_once JPATH_CONFIGURATION . '/configuration.php';
 // ----------------------
 class ArticleCli extends JApplicationCli
 {
-    public function __construct() {
+    public function __construct() 
+    {
         parent::__construct();
-
+        
         $this->config = new JConfig();
         $this->db = JFactory::getDbo();
         
         JFactory::$application = $this;
     }
 
-    public function doExecute() {
+    public function doExecute() 
+    {
+        $_SERVER['HTTP_HOST'] = 'localhost';
+        $this->app = JFactory::getApplication('site');
 
-        $category_titles = array("Red", "Blue", "Green");
-
-        // add categories to database
-        for ($i = 0; $i < count($category_titles); $i++)
-        {
-            $this->save($category_titles[$i]);
+        $category_titles = (array) $GLOBALS['argv'];
+        
+        if($this->input->get('a',False))
+        {    
+            // add categories to database
+            for ($i = 2; $i <= count($category_titles); $i++)
+            {   
+                if(!empty($category_titles[2]))
+                {
+                    $this->save($category_titles[$i]);
+                }
+                else
+                {   $this->out();
+                    $this->out('Title Empty. Abroting.....');
+                    $this->out();
+                }   
+            }
         }
+        else
+        {   
+            $this->out();
+            $this->out('Command Not Found =====>   '.$category_titles[1]);
+            $this->out();
+            $this->out('Use   ======>    php article.php --a <Your titles> ');
+            $this->out();
+        } 
+
     }
 
-    private function save($title) {
-        
+    private function save($title) 
+    {   
         $table = JTable::getInstance("Category");
-
+        
         // get existing aliases from categories table
         $tab = $this->db->quoteName($this->config->dbprefix . "categories");
         $conditions = array(
@@ -63,29 +91,27 @@ class ArticleCli extends JApplicationCli
         );
 
         $query = $this->db->getQuery(true);
-        $query
-            ->select($this->db->quoteName("alias"))
-            ->from($tab)
-            ->where($conditions);
+        $query->select($this->db->quoteName("alias"))
+              ->from($tab)
+              ->where($conditions);
 
         $this->db->setQuery($query);
-        $cat_from_db = $this->db->loadObjectList();
+        $ext = $this->db->loadObjectList();
 
         $category_existing = False;
         $new_alias = JFilterOutput::stringURLSafe($title);
 
-        foreach ($cat_from_db as $cdb) 
+        foreach ($ext as $pks) 
         {
-            if ($cdb->alias == $new_alias) 
+            if ($pks->alias == $new_alias) 
             {
                 $category_existing = True;
                 $this->out("Category already existing: " . $new_alias . "\n");
             }
         }
-            
+
         if (!$category_existing)
         {
-
             $values = [
                 "id"    => null,
                 "title" => $title,
@@ -109,27 +135,29 @@ class ArticleCli extends JApplicationCli
 
             if (!$table->bind($values)) 
             {
-                JLog::add($row->getError(), JLog::ERROR, 'jerror');
+                $this->out('Save Failed'."\n");
                 return FALSE;
             }
 
             if (!$table->check()) 
             {
-                JLog::add($row->getError(), JLog::ERROR, 'jerror');
+                $this->out('Save Failed'."\n");
                 return FALSE;
             }
 
             if (!$table->store(TRUE)) 
             {
-                JLog::add($row->getError(), JLog::ERROR, 'jerror');
+                $this->out('Save Failed'."\n");
                 return FALSE;
             } 
 
             $table->rebuildPath($table->id); 
             $this->out("Category inserted: " . $table->id . " - " . $new_alias . "\n");
+
+            $this->out('Save Done!'."\n");
         }
     }
 }
+
 JApplicationCli::getInstance('ArticleCli')->execute();
 
-?>
