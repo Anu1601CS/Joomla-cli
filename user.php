@@ -153,7 +153,7 @@ class JoomlaCliUpdate extends JApplicationCli
 		$this->out('User created:'.$u);        	
         }
 
-       	$array['result']=array($u,$result)
+       	$array['result']=array($u,$result);
     }	
       return $array['result']; 
   }
