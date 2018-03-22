@@ -114,23 +114,23 @@ class JoomlaCliUpdate extends JApplicationCli
    public function addusers($username='user',$name='user',$email='@xyz.com',$groups=2)
     {
     
-    require_once(JPATH_ADMINISTRATOR.'/components/com_users/models/user.php');
+    	require_once(JPATH_ADMINISTRATOR.'/components/com_users/models/user.php');
     
-    $num=1;
-    $user = new JUser();
-		$array = array();
-		$data = array();
-		$array['username'] = $username;
-		$array['name'] = $name;
-		$array['email'] = $email;
-		$array['password'] = '12132421';
-		$array['groups']=array($groups);
-		$array['activation']='';
-		$array['block']=0;         
-		$array['result']=array();
+    	$num=1;
+    	$user = new JUser();
+	$array = array();
+	$data = array();
+	$array['username'] = $username;
+	$array['name'] = $name;
+	$array['email'] = $email;
+	$array['password'] = '12132421';
+	$array['groups']=array($groups);
+	$array['activation']='';
+	$array['block']=0;         
+	$array['result']=array();
 
-		$app = JFactory::getApplication('site');
-		$app->initialise();   
+	$app = JFactory::getApplication('site');
+	$app->initialise();   
 
     for ($u = 1; $u <= $num; $u++) {  
        	$user = JModelLegacy::getInstance('UsersModelUser');
@@ -146,17 +146,17 @@ class JoomlaCliUpdate extends JApplicationCli
 
        	if(!$result) 
         {
-          $this->out('User not created:'.$u)."\n";        	
+        	$this->out('User not created:'.$u)."\n";        	
         }
         else  
         {        	
-     	    $this->out('User created:'.$u);        	
+		$this->out('User created:'.$u);        	
         }
 
-       	$array['result']=array($u,$result);
-      }	
-      return $array['result'];  
-    }
+       	$array['result']=array($u,$result)
+    }	
+      return $array['result']; 
+  }
 
 }
 
